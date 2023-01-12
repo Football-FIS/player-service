@@ -2,6 +2,9 @@ import os
 
 from flask import Flask, jsonify, abort
 
+from bson import ObjectId
+from bson.errors import InvalidId
+
 from flask_restful import Api
 from flask_pymongo import PyMongo
 
@@ -37,3 +40,10 @@ def get_players(team_id: str):
         player['_id'] = str(player['_id'])
         
     return jsonify(team)
+
+@app.route('/api/v1/player/<string:id>', methods=['GET'])
+def get_player(id: str):
+    objectId = ObjectId(id)
+    player = mongo.db.players.find_one({'_id': objectId})
+    player['_id'] = str(player['_id'])
+    return jsonify(player)

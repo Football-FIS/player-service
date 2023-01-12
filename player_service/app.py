@@ -35,7 +35,7 @@ def get_players(team_id: str):
     if not team['players']:
         abort(400, f'there are no players for team "{str(team_id)}"')
 
-    # cast id to strong
+    # cast id to string
     for player in team['players']:
         player['_id'] = str(player['_id'])
         

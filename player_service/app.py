@@ -75,3 +75,25 @@ def post_player():
     player_dict['_id'] = str(insert_result.inserted_id)
 
     return jsonify(player_dict)
+
+
+@app.route('/api/v1/player', methods=['PUT'])
+def put_player():
+    # we are forcing application/json
+    raw_player = get_request_json_as_dict()
+
+    try:
+        _id = raw_player.pop('_id')
+    except:
+        abort(400, 'no field "_id" in body json.')
+
+    # validate object is well-formed
+    try:
+        player = Player(**raw_player)
+        mongo.db.players.update_one({'_id': ObjectId(_id)}, {"$set": player.to_json()})
+    except ValidationError as err:
+        return jsonify(err.errors()), status.HTTP_400_BAD_REQUEST
+    except InvalidId as err:
+        abort(400, f'player id is not well formed: {str(err)}')
+
+    return jsonify(raw_player)

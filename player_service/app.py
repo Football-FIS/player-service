@@ -5,6 +5,9 @@ from flask import Flask, jsonify, abort
 from bson import ObjectId
 from bson.errors import InvalidId
 
+from pydantic import ValidationError
+
+from flask_api import status
 from flask_restful import Api
 from flask_pymongo import PyMongo
 
@@ -58,7 +61,12 @@ def post_player():
     # we are forcing application/json
     raw_player = get_request_json_as_dict()
 
-    player = Player(**raw_player)
+    # validate object is well-formed
+    try:
+        player = Player(**raw_player)
+    except ValidationError as err:
+        return jsonify(err.errors()), status.HTTP_400_BAD_REQUEST
+
     insert_result = mongo.db.players.insert_one(player.to_json())
 
     # set object id

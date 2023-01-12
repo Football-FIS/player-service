@@ -43,7 +43,12 @@ def get_players(team_id: str):
 
 @app.route('/api/v1/player/<string:id>', methods=['GET'])
 def get_player(id: str):
-    objectId = ObjectId(id)
-    player = mongo.db.players.find_one({'_id': objectId})
-    player['_id'] = str(player['_id'])
+    try:
+        objectId = ObjectId(id)
+        player = mongo.db.players.find_one({'_id': objectId})
+        player['_id'] = str(player['_id'])
+    except InvalidId as err:
+        abort(400, f'player id is not well formed: {str(err)}')
+    except TypeError as err:
+        abort(400, f'player "{str(objectId)}" does not exist')
     return jsonify(player)

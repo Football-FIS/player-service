@@ -97,3 +97,15 @@ def put_player():
         abort(400, f'player id is not well formed: {str(err)}')
 
     return jsonify(raw_player)
+
+@app.route('/api/v1/player/<string:id>', methods=['DELETE'])
+def delete_player(id):
+    try:
+        objectId = ObjectId(id)
+        player = mongo.db.players.delete_one({'_id': objectId})
+        player['_id'] = str(player['_id'])
+    except InvalidId as err:
+        abort(400, f'player id is not well formed: {str(err)}')
+    except TypeError as err:
+        abort(400, f'player "{str(objectId)}" does not exist')
+    return jsonify(player)

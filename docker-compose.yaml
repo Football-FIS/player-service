@@ -1,0 +1,13 @@
+services:
+  player-service:
+    build:
+      context: player_service
+      target: builder
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - MONGO_URL=${MONGO_URL}
+      - PORT=${PORT}
+    restart: always
+    ports: 
+      - ${PORT}:${PORT}

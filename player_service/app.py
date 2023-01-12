@@ -52,3 +52,17 @@ def get_player(id: str):
     except TypeError as err:
         abort(400, f'player "{str(objectId)}" does not exist')
     return jsonify(player)
+
+@app.route('/api/v1/player', methods=['POST'])
+def post_player():
+    # we are forcing application/json
+    raw_player = get_request_json_as_dict()
+
+    player = Player(**raw_player)
+    insert_result = mongo.db.players.insert_one(player.to_json())
+
+    # set object id
+    player_dict = player.to_json()
+    player_dict['_id'] = str(insert_result.inserted_id)
+
+    return jsonify(player_dict)

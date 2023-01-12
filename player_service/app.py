@@ -12,5 +12,5 @@ app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 
 @app.route('/hello', methods=['GET'])
-def delete_player(id):
+def hello():
     return "hello-from-flask"

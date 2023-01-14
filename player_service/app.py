@@ -41,8 +41,31 @@ swagger = Swagger(app)
 
 @app.route('/api/v1/players', strict_slashes=False, methods=['GET'])
 @app.route('/api/v1/players/<int:team_id>', strict_slashes=False, methods=['GET'])
-@cache.cached()
+
 def get_players(team_id: int = None):
+
+    """
+    ---
+    parameters:
+      - name: team_id
+        in: path
+        type: string
+        required: false
+    definitions:
+      Team:
+        type: object
+        properties:
+          team_id:
+            type: string
+            required: true
+          players:
+            type: array
+            items:
+                $ref: '#/definitions/Player'
+            required: true
+   
+    """
+
     team = verify_token()
 
     if not team_id:
@@ -61,8 +84,9 @@ def get_players(team_id: int = None):
     return jsonify(team)
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['GET'])
-@cache.cached()
+
 def get_player(id: str):
+
     team = verify_token()
     try:
         objectId = ObjectId(id)
@@ -76,6 +100,9 @@ def get_player(id: str):
 
 @app.route('/api/v1/player', strict_slashes=False, methods=['POST'])
 def post_player():
+    
+    
+
     team = verify_token()
 
     # we are forcing application/json
@@ -100,6 +127,7 @@ def post_player():
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['PUT'])
 def put_player(id):
+    
     team = verify_token()
 
     # we are forcing application/json

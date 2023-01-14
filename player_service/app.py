@@ -133,7 +133,15 @@ def get_player(id: str):
 @app.route('/api/v1/player', strict_slashes=False, methods=['POST'])
 def post_player():
     
-    
+    """
+    ---
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: Player
+    """
 
     team = verify_token()
 

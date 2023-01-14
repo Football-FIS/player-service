@@ -11,6 +11,7 @@ from flask_api import status
 from flask_restful import Api
 from flask_pymongo import PyMongo
 from flask_caching import Cache
+from flasgger import Swagger
 
 from model import Player
 from utils import *
@@ -30,6 +31,9 @@ mongo = PyMongo(app)
 # Flask-Caching
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 60})
 cache.init_app(app)
+
+# flasgger
+swagger = Swagger(app)
 
 ####################################################################################################
 # ENDPOINTS                                                                                        #

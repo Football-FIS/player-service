@@ -29,24 +29,29 @@ mongo = PyMongo(app)
 # ENDPOINTS                                                                                        #
 ####################################################################################################
 
-@app.route('/api/v1/players/<string:team_id>', methods=['GET'])
-def get_players(team_id: str):
+@app.route('/api/v1/players', methods=['GET'])
+@app.route('/api/v1/players/<int:team_id>', methods=['GET'])
+def get_players(team_id: int = None):
+    team = verify_token()
+
+    if not team_id:
+        team_id = team['id']
+
     team = {
         'team_id': team_id,
         'players': [p for p in mongo.db.players.find({'team_id': team_id})]
     }
 
-    if not team['players']:
-        abort(400, f'there are no players for team "{str(team_id)}"')
-
     # cast id to string
-    for player in team['players']:
-        player['_id'] = str(player['_id'])
+    if team['players']:
+        for player in team['players']:
+            player['_id'] = str(player['_id'])
         
     return jsonify(team)
 
 @app.route('/api/v1/player/<string:id>', methods=['GET'])
 def get_player(id: str):
+    team = verify_token()
     try:
         objectId = ObjectId(id)
         player = mongo.db.players.find_one({'_id': objectId})
@@ -59,6 +64,8 @@ def get_player(id: str):
 
 @app.route('/api/v1/player', methods=['POST'])
 def post_player():
+    team = verify_token()
+
     # we are forcing application/json
     raw_player = get_request_json_as_dict()
 
@@ -68,6 +75,8 @@ def post_player():
     except ValidationError as err:
         return jsonify(err.errors()), status.HTTP_400_BAD_REQUEST
 
+    # set user id
+    player.team_id = team['id']
     insert_result = mongo.db.players.insert_one(player.to_json())
 
     # set object id
@@ -77,35 +86,47 @@ def post_player():
     return jsonify(player_dict)
 
 
-@app.route('/api/v1/player', methods=['PUT'])
-def put_player():
+@app.route('/api/v1/player/<string:id>', methods=['PUT'])
+def put_player(id):
+    team = verify_token()
+
     # we are forcing application/json
     raw_player = get_request_json_as_dict()
-
-    try:
-        _id = raw_player.pop('_id')
-    except:
-        abort(400, 'no field "_id" in body json.')
 
     # validate object is well-formed
     try:
         player = Player(**raw_player)
-        mongo.db.players.update_one({'_id': ObjectId(_id)}, {"$set": player.to_json()})
+
+        # find the player
+        objectId = ObjectId(id)
+        player = mongo.db.players.find_one({'_id': objectId, 'team_id': player.team_id})
+
+        # check the player exists
+        assert player is not None
+
+        # update
+        mongo.db.players.update_one({'_id': objectId}, {"$set": raw_player})
+        
+        player["_id"] = str(player["_id"]) 
     except ValidationError as err:
         return jsonify(err.errors()), status.HTTP_400_BAD_REQUEST
     except InvalidId as err:
         abort(400, f'player id is not well formed: {str(err)}')
+    except AssertionError as err:
+        abort(400, f'player "{str(objectId)}" does not exist or you can not edit it')
 
-    return jsonify(raw_player)
+    return jsonify(player)
 
 @app.route('/api/v1/player/<string:id>', methods=['DELETE'])
 def delete_player(id):
+    team = verify_token()
     try:
         objectId = ObjectId(id)
-        player = mongo.db.players.delete_one({'_id': objectId})
+        player = mongo.db.players.find_one({'_id': objectId, 'team_id': team['id']})
+        delete_result = mongo.db.players.delete_one({'_id': objectId, 'team_id': team['id']})
         player['_id'] = str(player['_id'])
     except InvalidId as err:
         abort(400, f'player id is not well formed: {str(err)}')
     except TypeError as err:
-        abort(400, f'player "{str(objectId)}" does not exist')
+        abort(400, f'player "{str(objectId)}" does not exist or you can not delete it')
     return jsonify(player)

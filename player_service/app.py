@@ -87,6 +87,38 @@ def get_players(team_id: int = None):
 
 def get_player(id: str):
 
+    """
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: string
+        required: true
+    definitions:
+      Player:
+        type: object
+        properties:
+          _id:
+            type: string
+            required: true
+          team_id:
+            type: string
+            required: true
+          first_name:
+            type: string
+            required: true
+          last_name:
+            type: string
+            required: true
+          email:
+            type: string
+            required: true
+          position:
+            type: string
+            required: true
+    
+    """
+
     team = verify_token()
     try:
         objectId = ObjectId(id)

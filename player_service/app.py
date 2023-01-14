@@ -236,9 +236,34 @@ def delete_player(id):
 
 @app.route('/api/v1/notify-players/<int:team_id>', strict_slashes=False, methods=['POST'])
 def notify_players(team_id):
-
-
-    # we are forcing application/json
+    """
+    ---
+    parameters:
+      - name: team_id
+        in: path
+        type: int
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: MailRequest
+    definitions:
+      MailRequest:
+        type: object
+        properties:
+          mail_sender:
+            type: string
+            required: true
+          mail_subject:
+            type: string
+            required: true
+          mail_content:
+            type: string
+            required: true
+  
+    """
+       # we are forcing application/json2
     raw_mail = get_request_json_as_dict()
 
     assert 'mail_sender'  in raw_mail, 'no "mail_sender" specified. Please, specify it.'

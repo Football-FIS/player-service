@@ -10,6 +10,7 @@ from pydantic import ValidationError
 from flask_api import status
 from flask_restful import Api
 from flask_pymongo import PyMongo
+from flask_caching import Cache
 
 from model import Player
 from utils import *
@@ -22,8 +23,13 @@ api = Api(app)
 # set secret key from environment variable
 app.secret_key = os.environ['SECRET_KEY']
 
+# mongo db setting
 app.config["MONGO_URI"] = os.environ['MONGO_URL']
 mongo = PyMongo(app)
+
+# Flask-Caching
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 60})
+cache.init_app(app)
 
 ####################################################################################################
 # ENDPOINTS                                                                                        #
@@ -31,6 +37,7 @@ mongo = PyMongo(app)
 
 @app.route('/api/v1/players', strict_slashes=False, methods=['GET'])
 @app.route('/api/v1/players/<int:team_id>', strict_slashes=False, methods=['GET'])
+@cache.cached()
 def get_players(team_id: int = None):
     team = verify_token()
 
@@ -50,6 +57,7 @@ def get_players(team_id: int = None):
     return jsonify(team)
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['GET'])
+@cache.cached()
 def get_player(id: str):
     team = verify_token()
     try:
@@ -130,3 +138,29 @@ def delete_player(id):
     except TypeError as err:
         abort(400, f'player "{str(objectId)}" does not exist or you can not delete it')
     return jsonify(player)
+
+@app.route('/api/v1/notify-players/<int:team_id>', strict_slashes=False, methods=['POST'])
+def notify_players(team_id):
+    # we are forcing application/json
+    raw_mail = get_request_json_as_dict()
+
+    assert 'mail_sender'  in raw_mail, 'no "mail_sender" specified. Please, specify it.'
+    assert 'mail_subject' in raw_mail, 'no "mail_subject" specified. Please, specify it.'
+    assert 'mail_content' in raw_mail, 'no "mail_content" specified. Please, specify it.'
+
+    team = {
+        'team_id': team_id,
+        'players': [p for p in mongo.db.players.find({'team_id': team_id})]
+    }
+
+    if not team['players']:
+        abort(406, f'team "{team_id}" has zero players registered.')
+
+    sendgrid_send_message(
+        raw_mail['mail_sender'],
+        [player['email'] for player in team['players']],
+        raw_mail['mail_subject'],
+        raw_mail['mail_content']
+    )
+
+    return make_response(f'mail sent successfully to {len(team["players"])} players (team_id = {team_id}).', 202)

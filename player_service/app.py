@@ -167,7 +167,15 @@ def post_player():
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['PUT'])
 def put_player(id):
-    
+    """
+    ---
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: Player
+    """
     team = verify_token()
 
     # we are forcing application/json

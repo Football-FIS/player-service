@@ -44,7 +44,7 @@ swagger = Swagger(app)
 
 def get_players(team_id: int = None):
 
-    """
+    """Get list of players. If team_id is not specified, caller team_id will be used.
     ---
     parameters:
       - name: team_id
@@ -87,7 +87,7 @@ def get_players(team_id: int = None):
 
 def get_player(id: str):
 
-    """
+    """Get a player from player id.
     ---
     parameters:
       - name: id
@@ -133,7 +133,7 @@ def get_player(id: str):
 @app.route('/api/v1/player', strict_slashes=False, methods=['POST'])
 def post_player():
     
-    """
+    """Post a new player.
     ---
     parameters:
       - name: body
@@ -167,7 +167,7 @@ def post_player():
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['PUT'])
 def put_player(id):
-    """
+    """Modify a player.
     ---
     parameters:
       - name: body
@@ -208,7 +208,7 @@ def put_player(id):
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['DELETE'])
 def delete_player(id):
 
-    """
+    """Delete a player.
     ---
     parameters:
       - name: id
@@ -236,7 +236,7 @@ def delete_player(id):
 
 @app.route('/api/v1/notify-players/<int:team_id>', strict_slashes=False, methods=['POST'])
 def notify_players(team_id):
-    """
+    """Send messages to players.
     ---
     parameters:
       - name: team_id

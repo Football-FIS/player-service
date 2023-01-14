@@ -130,3 +130,29 @@ def delete_player(id):
     except TypeError as err:
         abort(400, f'player "{str(objectId)}" does not exist or you can not delete it')
     return jsonify(player)
+
+@app.route('/api/v1/notify-players/<int:team_id>', strict_slashes=False, methods=['POST'])
+def notify_players(team_id):
+    # we are forcing application/json
+    raw_mail = get_request_json_as_dict()
+
+    assert 'mail_sender'  in raw_mail, 'no "mail_sender" specified. Please, specify it.'
+    assert 'mail_subject' in raw_mail, 'no "mail_subject" specified. Please, specify it.'
+    assert 'mail_content' in raw_mail, 'no "mail_content" specified. Please, specify it.'
+
+    team = {
+        'team_id': team_id,
+        'players': [p for p in mongo.db.players.find({'team_id': team_id})]
+    }
+
+    if not team['players']:
+        abort(406, f'team "{team_id}" has zero players registered.')
+
+    sendgrid_send_message(
+        raw_mail['mail_sender'],
+        [player['email'] for player in team['players']],
+        raw_mail['mail_subject'],
+        raw_mail['mail_content']
+    )
+
+    return make_response(f'mail sent successfully to {len(team["players"])} players (team_id = {team_id}).', 202)

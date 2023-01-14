@@ -10,6 +10,7 @@ from pydantic import ValidationError
 from flask_api import status
 from flask_restful import Api
 from flask_pymongo import PyMongo
+from flask_caching import Cache
 
 from model import Player
 from utils import *
@@ -22,8 +23,13 @@ api = Api(app)
 # set secret key from environment variable
 app.secret_key = os.environ['SECRET_KEY']
 
+# mongo db setting
 app.config["MONGO_URI"] = os.environ['MONGO_URL']
 mongo = PyMongo(app)
+
+# Flask-Caching
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 60})
+cache.init_app(app)
 
 ####################################################################################################
 # ENDPOINTS                                                                                        #
@@ -31,6 +37,7 @@ mongo = PyMongo(app)
 
 @app.route('/api/v1/players', strict_slashes=False, methods=['GET'])
 @app.route('/api/v1/players/<int:team_id>', strict_slashes=False, methods=['GET'])
+@cache.cached()
 def get_players(team_id: int = None):
     team = verify_token()
 
@@ -50,6 +57,7 @@ def get_players(team_id: int = None):
     return jsonify(team)
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['GET'])
+@cache.cached()
 def get_player(id: str):
     team = verify_token()
     try:

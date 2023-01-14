@@ -207,6 +207,21 @@ def put_player(id):
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['DELETE'])
 def delete_player(id):
+
+    """
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: string
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: Player
+
+    """
     team = verify_token()
     try:
         objectId = ObjectId(id)
@@ -221,6 +236,8 @@ def delete_player(id):
 
 @app.route('/api/v1/notify-players/<int:team_id>', strict_slashes=False, methods=['POST'])
 def notify_players(team_id):
+
+
     # we are forcing application/json
     raw_mail = get_request_json_as_dict()
 

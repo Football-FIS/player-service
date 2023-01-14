@@ -29,8 +29,8 @@ mongo = PyMongo(app)
 # ENDPOINTS                                                                                        #
 ####################################################################################################
 
-@app.route('/api/v1/players', methods=['GET'])
-@app.route('/api/v1/players/<int:team_id>', methods=['GET'])
+@app.route('/api/v1/players', strict_slashes=False, methods=['GET'])
+@app.route('/api/v1/players/<int:team_id>', strict_slashes=False, methods=['GET'])
 def get_players(team_id: int = None):
     team = verify_token()
 
@@ -49,7 +49,7 @@ def get_players(team_id: int = None):
         
     return jsonify(team)
 
-@app.route('/api/v1/player/<string:id>', methods=['GET'])
+@app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['GET'])
 def get_player(id: str):
     team = verify_token()
     try:
@@ -62,7 +62,7 @@ def get_player(id: str):
         abort(400, f'player "{str(objectId)}" does not exist')
     return jsonify(player)
 
-@app.route('/api/v1/player', methods=['POST'])
+@app.route('/api/v1/player', strict_slashes=False, methods=['POST'])
 def post_player():
     team = verify_token()
 
@@ -86,7 +86,7 @@ def post_player():
     return jsonify(player_dict)
 
 
-@app.route('/api/v1/player/<string:id>', methods=['PUT'])
+@app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['PUT'])
 def put_player(id):
     team = verify_token()
 
@@ -117,7 +117,7 @@ def put_player(id):
 
     return jsonify(player)
 
-@app.route('/api/v1/player/<string:id>', methods=['DELETE'])
+@app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['DELETE'])
 def delete_player(id):
     team = verify_token()
     try:

@@ -11,6 +11,7 @@ from flask_api import status
 from flask_restful import Api
 from flask_pymongo import PyMongo
 from flask_caching import Cache
+from flasgger import Swagger
 
 from model import Player
 from utils import *
@@ -31,14 +32,46 @@ mongo = PyMongo(app)
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 60})
 cache.init_app(app)
 
+# flasgger
+swagger = Swagger(app)
+
 ####################################################################################################
 # ENDPOINTS                                                                                        #
 ####################################################################################################
 
 @app.route('/api/v1/players', strict_slashes=False, methods=['GET'])
 @app.route('/api/v1/players/<int:team_id>', strict_slashes=False, methods=['GET'])
-@cache.cached()
+
 def get_players(team_id: int = None):
+
+    """Get list of players. If team_id is not specified, caller team_id will be used.
+    ---
+    parameters:
+      - name: team_id
+        in: path
+        type: string
+        required: false
+    definitions:
+      Team:
+        type: object
+        properties:
+          team_id:
+            type: string
+            required: true
+          players:
+            type: array
+            items:
+                $ref: '#/definitions/Player'
+            required: true
+     responses:
+      200:
+        description: A team object.
+        schema:
+          $ref: '#/definitions/Team'
+      400:
+        description: team_id ill-formed error or team_id doesn't exist error.      
+    """
+
     team = verify_token()
 
     if not team_id:
@@ -57,8 +90,48 @@ def get_players(team_id: int = None):
     return jsonify(team)
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['GET'])
-@cache.cached()
+
 def get_player(id: str):
+
+    """Get a player from player id.
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: string
+        required: true
+    definitions:
+      Player:
+        type: object
+        properties:
+          _id:
+            type: string
+            required: true
+          team_id:
+            type: string
+            required: true
+          first_name:
+            type: string
+            required: true
+          last_name:
+            type: string
+            required: true
+          email:
+            type: string
+            required: true
+          position:
+            type: string
+            required: true
+    responses:
+      200:
+        description: A player object.
+        schema:
+          $ref: '#/definitions/Player'
+      400:
+        description: id ill-formed error or id doesn't exist error.
+    
+    """
+
     team = verify_token()
     try:
         objectId = ObjectId(id)
@@ -72,6 +145,24 @@ def get_player(id: str):
 
 @app.route('/api/v1/player', strict_slashes=False, methods=['POST'])
 def post_player():
+    
+    """Post a new player.
+    ---
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: Player
+    responses:
+      200:
+        description: A player object.
+        schema:
+          $ref: '#/definitions/Player'
+      400:
+        description: json body ill-formed.
+    """
+
     team = verify_token()
 
     # we are forcing application/json
@@ -96,6 +187,22 @@ def post_player():
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['PUT'])
 def put_player(id):
+    """Modify a player.
+    ---
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: Player
+    responses:
+      200:
+        description: A player object.
+        schema:
+          $ref: '#/definitions/Player'
+      400:
+        description: json body ill-formed.      
+    """
     team = verify_token()
 
     # we are forcing application/json
@@ -127,6 +234,28 @@ def put_player(id):
 
 @app.route('/api/v1/player/<string:id>', strict_slashes=False, methods=['DELETE'])
 def delete_player(id):
+
+    """Delete a player.
+    ---
+    parameters:
+      - name: id
+        in: path
+        type: string
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: Player
+    responses:
+      200:
+        description: A player object.
+        schema:
+          $ref: '#/definitions/Player'
+      400:
+        description: id ill-formed error or id doesn't exist error.
+
+    """
     team = verify_token()
     try:
         objectId = ObjectId(id)
@@ -141,7 +270,39 @@ def delete_player(id):
 
 @app.route('/api/v1/notify-players/<int:team_id>', strict_slashes=False, methods=['POST'])
 def notify_players(team_id):
-    # we are forcing application/json
+    """Send messages to players.
+    ---
+    parameters:
+      - name: team_id
+        in: path
+        type: int
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          id: MailRequest
+    definitions:
+      MailRequest:
+        type: object
+        properties:
+          mail_sender:
+            type: string
+            required: true
+          mail_subject:
+            type: string
+            required: true
+          mail_content:
+            type: string
+            required: true
+     responses:
+      200:
+        description: message indicating how many mails has been sent.
+      400:
+        description: team_id ill-formed error or team_id doesn't exist error.
+  
+    """
+       # we are forcing application/json2
     raw_mail = get_request_json_as_dict()
 
     assert 'mail_sender'  in raw_mail, 'no "mail_sender" specified. Please, specify it.'

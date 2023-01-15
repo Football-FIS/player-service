@@ -122,6 +122,13 @@ def get_player(id: str):
           position:
             type: string
             required: true
+    responses:
+      200:
+        description: A player object.
+        schema:
+          $ref: '#/definitions/Player'
+      400:
+        description: id ill-formed error or id doesn't exist error.
     
     """
 

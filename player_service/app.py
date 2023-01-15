@@ -195,6 +195,13 @@ def put_player(id):
         required: true
         schema:
           id: Player
+    responses:
+      200:
+        description: A player object.
+        schema:
+          $ref: '#/definitions/Player'
+      400:
+        description: json body ill-formed.      
     """
     team = verify_token()
 

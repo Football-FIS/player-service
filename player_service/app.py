@@ -63,7 +63,13 @@ def get_players(team_id: int = None):
             items:
                 $ref: '#/definitions/Player'
             required: true
-   
+     responses:
+      200:
+        description: A team object.
+        schema:
+          $ref: '#/definitions/Team'
+      400:
+        description: team_id ill-formed error or team_id doesn't exist error.      
     """
 
     team = verify_token()

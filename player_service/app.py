@@ -247,6 +247,13 @@ def delete_player(id):
         required: true
         schema:
           id: Player
+    responses:
+      200:
+        description: A player object.
+        schema:
+          $ref: '#/definitions/Player'
+      400:
+        description: id ill-formed error or id doesn't exist error.
 
     """
     team = verify_token()
@@ -288,6 +295,11 @@ def notify_players(team_id):
           mail_content:
             type: string
             required: true
+     responses:
+      200:
+        description: message indicating how many mails has been sent.
+      400:
+        description: team_id ill-formed error or team_id doesn't exist error.
   
     """
        # we are forcing application/json2

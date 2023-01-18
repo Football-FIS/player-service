@@ -268,7 +268,7 @@ def notify_players():
             type: string
             required: true
           user_id:
-            type: string
+            type: number
             required: true
           opponent:
             type: string
@@ -292,7 +292,7 @@ def notify_players():
             type: string
             required: true
           sent_email:
-            type: string
+            type: boolean
             required: true  
     responses:
       202:
@@ -316,8 +316,8 @@ def notify_players():
         'players': [p for p in mongo.db.players.find({'team_id': match.user_id})]
     }
 
-    if not team['players']:
-        make_response(f'team "{match.user_id}" has zero players registered.', 202)
+    if not team['players'] or len(team['players']) == 0:
+        return make_response(f'team "{match.user_id}" has zero players registered.', 202)
 
     sendgrid_send_message(
         os.environ['SENDGRID_SENDER_EMAIL'],

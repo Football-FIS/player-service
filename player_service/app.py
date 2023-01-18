@@ -7,7 +7,7 @@ from bson.errors import InvalidId
 
 from pydantic import ValidationError
 
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify
 from flask_api import status
 from flask_restful import Api
 from flask_pymongo import PyMongo
@@ -303,7 +303,11 @@ def notify_players():
     # we are forcing application/json2
     raw_match = get_request_json_as_dict()
 
-    match = Match(**raw_match)
+    try:
+        match = Match(**raw_match)
+    except ValidationError as err:
+        return jsonify(err.errors()), status.HTTP_400_BAD_REQUEST
+
     mail_body = create_mail_body_from_match(match)
     mail_subject = create_mail_subject_from_match(match)
 

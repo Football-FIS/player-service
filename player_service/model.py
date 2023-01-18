@@ -29,4 +29,4 @@ class Match(BaseModel):
     city: str
     weather: str
     start_date: str
-    sent_email: str 
+    sent_email: bool

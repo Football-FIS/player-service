@@ -317,7 +317,7 @@ def notify_players():
     }
 
     if not team['players']:
-        abort(406, f'team "{match.user_id}" has zero players registered.')
+        make_response(f'team "{match.user_id}" has zero players registered.', 202)
 
     sendgrid_send_message(
         os.environ['SENDGRID_SENDER_EMAIL'],

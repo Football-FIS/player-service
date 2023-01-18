@@ -6,9 +6,6 @@ import traceback
 
 from flask import request, make_response, abort as flask_abort
 
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-
 
 VERIFY_TOKEN_URL = os.environ['VERIFY_TOKEN_URL']
 

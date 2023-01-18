@@ -108,13 +108,13 @@ def create_mail_body_from_match(match) -> str:
     return f"""Hi!.\n
 You have a match scheduled:
 
-\topponent:   {match.opponent}
-\tis_local:   {match.is_local}
-\talignment:  {match.alignment}
-\turl:        {match.url}
-\tcity:       {match.city}
-\tweather:    {match.weather}
-\tstart_date: {match.start_date}
+\topponent:\t\t{match.opponent}
+\tis_local:\t\t{match.is_local}
+\talignment:\t\t{match.alignment}
+\turl:\t\t{match.url}
+\tcity:\t\t{match.city}
+\tweather:\t\t{match.weather}
+\tstart_date:\t\t{match.start_date}
 
 Best regards!
 """

@@ -2,8 +2,8 @@ from pydantic import BaseModel, EmailStr, Field
 
 class Player(BaseModel):
     team_id: int
-    first_name: str = Field(min_length=1, max_length=32)
-    last_name: str = Field(min_length=1, max_length=32)
+    first_name: str = Field(min_length=0, max_length=32)
+    last_name: str = Field(min_length=0, max_length=32)
     email: EmailStr
     position: str = Field(
         strip_whitespace=True,
@@ -18,3 +18,15 @@ class Player(BaseModel):
             "email": self.email,
             "position": self.position
         }
+
+class Match(BaseModel):
+    id: str
+    user_id: int
+    opponent: str
+    is_local: bool
+    alignment: str
+    url: str
+    city: str
+    weather: str
+    start_date: str
+    sent_email: str 

@@ -64,7 +64,8 @@ def sendgrid_send_message(from_email, to_emails, subject, content):
 
     Args:
         from_email: sender email.
-        to_emails: list of receivers emails.
+        to_e
+        mails: list of receivers emails.
         subject: email subject.
         content: mail content.
 
@@ -95,3 +96,25 @@ def sendgrid_send_message(from_email, to_emails, subject, content):
 
     if not res.ok:
         abort(res.status_code, res.text)
+
+def create_mail_subject_from_match(match) -> str:
+    """Given a match object return mail subject
+    """
+    return f"Match against {match.opponent} on {match.start_date}"
+
+def create_mail_body_from_match(match) -> str:
+    """Given a match object return mail body
+    """
+    return f"""Hi!.\n
+You have a match scheduled:
+
+\topponent:   {match.opponent}
+\tis_local:   {match.is_local}
+\talignment:  {match.alignment}
+\turl:        {match.url}
+\tcity:       {match.city}
+\tweather:    {match.weather}
+\tstart_date: {match.start_date}
+
+Best regards!
+"""

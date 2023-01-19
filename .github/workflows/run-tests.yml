@@ -12,6 +12,7 @@ env:
   SENDGRID_API_KEY: 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
   SENDGRID_URL: https://api.sendgrid.com/v3/mail/send
   SENDGRID_SENDER_EMAIL: joscrulor@alum.us.es
+  PLAYER_SERVICE_URL: localhost:8080 
 
 permissions:
   contents: read

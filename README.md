@@ -38,7 +38,7 @@ Hemos utilizado la API Rest  **Send Grid**  para el envió de correos electróni
 - Deben validarse los datos antes de almacenarlos en la base de datos (por ejemplo, haciendo uso de mongoose) ([**player_service/model.py**](./player_service/model.py)).
 - Se debe utilizar gestión del código fuente y mecanismos de integración continua:
   - El código debe estar subido a un repositorio de Github siguiendo Github flow.
-  - El código debe compilarse y probarse automáticamente usando GitHub Actions u otro sistema de integración continua en cada commit ([Github Actions](https://github.com/Football-FIS/player-service/actions)).
+  - El código debe compilarse y probarse automáticamente usando GitHub Actions u otro sistema de integración continua en cada commit ([Github Actions](https://github.com/Football-FIS/player-service/actions)). **Nuestros test son más básicos y se lanzan de forma manual**
 - Debe haber definida una imagen Docker del proyecto ([**docker-compose.yaml**](./docker-compose.yaml)).
 
 ## Microservicio avanzado:

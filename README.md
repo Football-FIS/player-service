@@ -36,11 +36,16 @@ Hemos utilizado la API Rest  **Send Grid**  para el envió de correos electróni
 - Se debe tener una documentación de todas las operaciones de la APIincluyendo las posibles peticiones y las respuestas recibidas (https://player-service-danaremar.cloud.okteto.net/apidocs/).
 - Debe tener persistencia utilizando MongoDBu otra base de datos no SQL ([**player_service/app.py**](./player_service/app.py)).
 - Deben validarse los datos antes de almacenarlos en la base de datos (por ejemplo, haciendo uso de mongoose) ([**player_service/model.py**](./player_service/model.py)).
+- Se debe utilizar gestión del código fuente y mecanismos de integración continua:
+  - El código debe estar subido a un repositorio de Github siguiendo Github flow.
+  - El código debe compilarse y probarse automáticamente usando GitHub Actions u otro sistema de integración continua en cada commit ([Github Actions](https://github.com/Football-FIS/player-service/actions)).
 - Debe haber definida una imagen Docker del proyecto ([**docker-compose.yaml**](./docker-compose.yaml)).
 
 ## Microservicio avanzado:
 
 - Consumir alguna API externa (SendGrid) a través del backend  [función **sengrid_send_mail** de **player_service/utils.py**](./player_service/utils.py)).
+
+![](docs/img/sengrind-mail.png)
 
 ## Extra
 

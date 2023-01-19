@@ -25,11 +25,11 @@ env:
   MONGO_URL: ${{ inputs.MONGO_URL }}
   PORT: 8080
   VERIFY_TOKEN_URL: ${{ inputs.VERIFY_TOKEN_URL }}
-  SENDGRID_API_KEY: ${{ SENDGRID_API_KEY }
+  SENDGRID_API_KEY: ${{ inputs.SENDGRID_API_KEY }}
   SENDGRID_URL: https://api.sendgrid.com/v3/mail/send
-  SENDGRID_SENDER_EMAIL: ${{ SENDGRID_SENDER_EMAIL }}
+  SENDGRID_SENDER_EMAIL: ${{ inputs.SENDGRID_SENDER_EMAIL }}
   PLAYER_SERVICE_URL: localhost:8080
-  AUTH_TOKEN: ${{ AUTH_TOKEN }}
+  AUTH_TOKEN: ${{ inputs.AUTH_TOKEN }}
 
 permissions:
   contents: read

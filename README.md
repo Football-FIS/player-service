@@ -66,7 +66,7 @@ docker compose --env-file .env -f compose.yaml up --build
 
 ### Variables de entorno
 
-Esta aplicación recibe parametro mediante variables de entorno. Se puede encontrar una plantilla en [.env.template](.env.template).
+Esta aplicación recibe parámetros mediante variables de entorno. Se puede encontrar una plantilla en [.env.template](.env.template).
 
 ### Autores
 

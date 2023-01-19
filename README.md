@@ -43,7 +43,7 @@ Hemos utilizado la API Rest  **Send Grid**  para el envió de correos electróni
 
 ## Microservicio avanzado:
 
-- Consumir alguna API externa (SendGrid) a través del backend  [función **sengrid_send_mail** de **player_service/utils.py**](./player_service/utils.py)).
+- Consumir alguna API externa (SendGrid) a través del backend ([función **sengrid_send_mail** de **player_service/utils.py**](./player_service/utils.py)).
 
 ![](docs/img/sendgrid-mail.png)
 

@@ -45,7 +45,7 @@ Hemos utilizado la API Rest  **Send Grid**  para el envió de correos electróni
 
 - Consumir alguna API externa (SendGrid) a través del backend  [función **sengrid_send_mail** de **player_service/utils.py**](./player_service/utils.py)).
 
-![](docs/img/sengrind-mail.png)
+![](docs/img/sendgrid-mail.png)
 
 ## Extra
 

@@ -4,24 +4,23 @@
 
 ## Descripción
 
-Este microservicio forma parte de la aplicación, proyecto para la asignatura "Fundamentos de Ingeniería Software para Cloud" del "Máster en Ingeniería del Software: Cloud, Datos y Gestión TI" en la  Universidad de Sevilla.
+Este microservicio forma parte de la aplicación **Footmatch**, proyecto para la asignatura _**Fundamentos de Ingeniería Software para Cloud" del "Máster en Ingeniería del Software: Cloud, Datos y Gestión TI"**_ en la  Universidad de Sevilla.
 
-la funcionalidad de este microservicio es ofrecerle las informaciones a Team-Service las informaciones necesarias para la creación de los equipo, puedo ellos consumir de nuestra API, así como también ofreciéndole el servicio del envío de correos, notificando a los jugadores cuando se aproxime la fecha del partido al que están inscrito.
-
+Este microservio ofrece una [API Rest](https://player-service-danaremar.cloud.okteto.net/apidocs/) que permite realizar operaciones CRUD sobre recursos jugador. Además, utilizando la API de **SendGrid**, ofrece enviar notificaciones a los jugadores por correo (el servicio **TeamService** utiliza el endpoint **notify-players** con este fin).
 
 ## Tecnologías
 
 Para el desarrollo de este microservicio se utilizaron las siguientes tecnologías:
--	**Django**  (backend)
--   **Flask**  (FrameWork-backend)
--   **MongoDB**  (Base de Datos)
--   **Swagger**  (Documentación de la API)
--   **Docker**  (Gestor de contenedores)
--   **Okteto**  (Despliegue en la nube)
+- **Flask**  (framework backend)
+- **Angular**  (framework frontend)
+- **MongoDB**  (base de datos)
+- **Swagger**  (documentación de la API)
+- **Docker**  (gestor de contenedores)
+- **Okteto**  (despliegue en la nube)
 
 ## API Endpoints
 
-(Swagger API docs)[https://player-service-danaremar.cloud.okteto.net/apidocs/]
+[API Swagger](https://player-service-danaremar.cloud.okteto.net/apidocs/)
 
 ## API externas
 

@@ -43,6 +43,32 @@ Hemos utilizado la API Rest  **Send Grid**  para el envió de correos electróni
 
 - Consumir alguna API externa (SendGrid) a través del backend  [función **sengrid_send_mail** de **player_service/utils.py**](./player_service/utils.py)).
 
+## Extra
+
+- Frontend común que integra todos los microservicios.
+- Empleo de JWT para autentificarse (cabecera authentification: Bearer ...)
+- Swagger (https://player-service-danaremar.cloud.okteto.net/apidocs/).
+
+## Run
+
+### Gunicorn
+
+Ejecución local con [_**gunicorn**_](https://gunicorn.org/):
+
+```
+unicorn --bind 0.0.0.0:8080 wsgi:app --reload
+```
+
+### Docker
+
+```
+docker compose --env-file .env -f compose.yaml up --build
+```
+
+### Variables de entorno
+
+Esta aplicación recibe parametro mediante variables de entorno. Se puede encontrar una plantilla en [.env.template](.env.template).
+
 ### Autores
 
 -   José María Cruz Lorite

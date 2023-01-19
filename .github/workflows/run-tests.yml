@@ -25,4 +25,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker compose --env-file .env -f docker-compose.yaml up --build
+      run: docker compose -f docker-compose.yaml up --build
